@@ -1,0 +1,28 @@
+{
+  "name": "memestream-soundcloud",
+  "version": "0.1.0",
+  "description": "MemeStream for SoundCloud Demo App",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/teybannerman/memestream-soundcloud.git"
+  },
+  "keywords": [
+    "memestream",
+    "soundcloud",
+    "image",
+    "visualisation"
+  ],
+  "author": "@teybannerman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/teybannerman/memestream-soundcloud/issues"
+  },
+  "homepage": "https://github.com/teybannerman/memestream-soundcloud",
+  "dependencies": {
+    "express": "^4.4.0"
+  }
+}
