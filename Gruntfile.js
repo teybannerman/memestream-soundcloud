@@ -39,6 +39,7 @@ module.exports = function(grunt) {
         src: [
           './assets/js/jquery.js',
           './assets/js/uikit.js',
+          './assets/js/waveform.js',
           './assets/js/main.js'
         ],
         dest: './public/js/app.js',
