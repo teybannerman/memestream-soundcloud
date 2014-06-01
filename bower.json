@@ -17,6 +17,7 @@
   ],
   "dependencies": {
     "soundcloud": "~0.1.0",
-    "uikit": "~2.6.0"
+    "uikit": "~2.6.0",
+    "jquery.imgpreload": "~1.5.20131127"
   }
 }

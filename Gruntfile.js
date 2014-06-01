@@ -12,6 +12,7 @@ module.exports = function(grunt) {
         },
         files: {
           'jquery.js': 'jquery/jquery.js',
+          'jquery.imgpreload.js': 'jquery.imgpreload/jquery.imgpreload.js',
           'uikit.js': 'uikit/dist/js/uikit.js',
           'soundcloud.js': 'soundcloud/sdk.js',
         }
