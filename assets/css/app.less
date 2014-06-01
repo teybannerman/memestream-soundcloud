@@ -1,2 +1,72 @@
-@import (inline) 'uikit.css';
+// --------------------------------------------------------------------------
+// SETUP
+// --------------------------------------------------------------------------
+//
+// Any variables you find set in inuit.css’ `_vars.scss` that you do not wish to
+// keep, simply redefine here. This means that if inuit.css, for example, sets
+// your `$base-font-size` at 16px and you wish it to be 14px, simply redeclare
+// that variable in this file. inuit.css ignores its own variables in favour of
+// using your own, so you can completely modify how inuit.css works without ever
+// having to alter the framework itself.
 
+
+// @ IMPORTS
+// --------------------------------------------------------------------------
+
+@import (inline) 'uikit.css';
+@import 'elements';
+
+
+// @ VARIABLES
+// --------------------------------------------------------------------------
+
+// Colours
+@c-body:                          #F2F2F2;
+@c-text:                          #222;
+@c-soundcloud-orange-primary:     #FA3219;
+@c-soundcloud-orange-secondary:   #F76700;
+@c-soundcloud-orange-tertiary:    #C53421;
+
+
+// @ BASE
+// --------------------------------------------------------------------------
+
+body {
+  .radial-gradient(#DDD, #FFF, @c-body);
+}
+.logo {
+  width: 300px;
+}
+h1 {
+  color: @c-text;
+}
+
+
+// @ PANELS
+// --------------------------------------------------------------------------
+.panel {
+  display: none;
+  height: 100%;
+  vertical-align: middle;
+
+  &.show {
+    display: inline-block;
+  }
+}
+
+
+// @ BUTTONS
+// --------------------------------------------------------------------------
+
+.uk-button-primary {
+  .gradient(@c-soundcloud-orange-primary, @c-soundcloud-orange-primary, @c-soundcloud-orange-secondary);
+}
+
+// @ NAVBAR
+// --------------------------------------------------------------------------
+
+.app-nav { 
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
