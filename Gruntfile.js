@@ -13,8 +13,7 @@ module.exports = function(grunt) {
         files: {
           'jquery.js': 'jquery/jquery.js',
           'jquery.imgpreload.js': 'jquery.imgpreload/jquery.imgpreload.js',
-          'uikit.js': 'uikit/dist/js/uikit.js',
-          'soundcloud.js': 'soundcloud/sdk.js',
+          'uikit.js': 'uikit/dist/js/uikit.js'
         }
       },
       css: {
@@ -40,7 +39,6 @@ module.exports = function(grunt) {
         src: [
           './assets/js/jquery.js',
           './assets/js/uikit.js',
-          './assets/js/soundcloud.js',
           './assets/js/main.js'
         ],
         dest: './public/js/app.js',
