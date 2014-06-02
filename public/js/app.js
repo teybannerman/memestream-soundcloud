@@ -12062,7 +12062,8 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
     SC.initialize({
       client_id: SOUNDCLOUD_ID,
-      redirect_uri: "http://localhost:4000/callback.html"
+      //redirect_uri: "http://localhost:4000/callback.html"
+      redirect_uri: "http://memestream-soundcloud.herokuapp.com/callback.html"
     });
 
     // handle signin
