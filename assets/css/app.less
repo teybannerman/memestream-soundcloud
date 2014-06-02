@@ -89,6 +89,12 @@ a {
 .uk-button-primary {
   .gradient(@c-soundcloud-orange-primary, @c-soundcloud-orange-primary, @c-soundcloud-orange-secondary);
 }
+.backToSounds {
+  display: none;
+  float: right;
+  font-size: 11px;
+  margin: 15px 12px 0 0;
+}
 
 
 // @ TRACK LISTING
@@ -181,6 +187,24 @@ a {
   display: none;
 }
 
+.trackInfo {
+  position: fixed;
+  bottom: 60px;
+  right: 20px;
+  text-align: right;
+  font-weight: bold;
+  color: #FFF;
+  text-shadow: -1px 1px 8px #222, 1px -1px 8px #000;
+
+  .author {
+    font-size:12px;
+    display: block;
+  }
+  .title {
+    font-size: 14px;
+    display: block;
+  }
+}
 
 // @ MEDIA QUERIES
 // --------------------------------------------------------------------------

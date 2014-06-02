@@ -16,8 +16,8 @@
 
     SC.initialize({
       client_id: SOUNDCLOUD_ID,
-      //redirect_uri: "http://localhost:4000/callback.html"
-      redirect_uri: "http://memestream-soundcloud.herokuapp.com/callback.html"
+      redirect_uri: "http://localhost:4000/callback.html"
+      //redirect_uri: "http://memestream-soundcloud.herokuapp.com/callback.html"
     });
 
     // handle signin
@@ -41,7 +41,15 @@
     $('a.sound').live('click', function() {
       var $this = ($(this));
       loadTrack($this.data('uri'));
+      $('.trackInfo').empty().append('<span class="author">' + $this.data('author') + '</span><span class="title">' + $this.data('title') + '</span>');
       return false;
+    });
+
+    // Back button while playing a sound
+    $('.backToSounds').live('click', function() {
+      $('#vis').fadeOut(500);
+      $('.panel-selector').fadeIn(500);
+      $('.backToSounds').hide();
     });
 
     // resize our canvas element so that it behavess responsively and always fits the window
@@ -51,35 +59,6 @@
       canvasElement.setAttribute('width', cWidth);
       canvasElement.setAttribute('height', cHeight);
     });
-
-    // load our SoundCloud sound, process its waveform for the playback area, and connect it 
-    // to our WebAudio object
-    var loadTrack = function(uri) {
-      SC.get(uri, function(track){
-
-        // load waveform
-        $('#waveform').empty();
-        var waveform = new Waveform({
-          container: document.getElementById("waveform"),
-          innerColor: "#333"
-        });
-
-        waveform.dataFromSoundCloudTrack(track);
-        var streamOptions = waveform.optionsForSyncedStream();
-
-        audioSource.defaultOptions = streamOptions;
-        audioSource.playStream(uri+'/stream?client_id=' + SOUNDCLOUD_ID);
-        draw();
-
-        /*SC.stream(track.uri, streamOptions, function(stream){
-          window.nowPlaying = stream;
-          //togglePause();
-        });*/
-      });
-
-      $('.panel-selector').hide(500);
-      $('#vis').show(500);
-    }
 
     // get our set of meme images from imgur and store them in an array for later use
     var getImages = function(key) {
@@ -113,7 +92,7 @@
             console.log(tracks);
             for (var i=0, len=tracks.length; i<len; ++i) {
               var track = tracks[i];
-              $('.tracks').append('<li><a class="sound" href="#'+track.uri+'" data-uri="'+track.uri+'"><span>'+track.title+'</span><img src="'+track.waveform_url+'"/></a></li>')
+              $('.tracks').append('<li><a class="sound" href="#'+track.uri+'" data-uri="'+track.uri+'" data-author="'+track.user.username+'" data-title="'+track.title+'"><span>'+track.title+'</span><img src="'+track.waveform_url+'"/></a></li>')
             }
           }
           else {
@@ -123,6 +102,37 @@
       });
     }
 
+    // load our SoundCloud sound, process its waveform for the playback area, and connect it 
+    // to our WebAudio object
+    var loadTrack = function(uri) {
+      SC.get(uri, function(track){
+
+        // load waveform
+        $('#waveform').empty();
+        var waveform = new Waveform({
+          container: document.getElementById("waveform"),
+          innerColor: "#333"
+        });
+
+        waveform.dataFromSoundCloudTrack(track);
+        var streamOptions = waveform.optionsForSyncedStream();
+
+        audioSource.defaultOptions = streamOptions;
+        audioSource.playStream(uri+'/stream?client_id=' + SOUNDCLOUD_ID);
+        draw();
+
+        /*SC.stream(track.uri, streamOptions, function(stream){
+          window.nowPlaying = stream;
+          //togglePause();
+        });*/
+      });
+
+      $('.panel-selector').fadeOut(500);
+      $('#vis').fadeIn(500);
+      $('.backToSounds').show();
+    }
+
+    // Handle all of our visualisation canvas drawing
     var draw = function() {
 
       for(bin = 0; bin < audioSource.streamData.length; bin ++) {
