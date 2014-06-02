@@ -1,7 +1,23 @@
+/**
+ * @name meamstream-soundcloud/main.js
+ *
+ * @author @teybannerman
+ *
+ * @description
+ * MemeStream is a little proof of concept that takes the randomness of the meme 
+ * and fuses it with SoundCloud sounds. It is jQuery-based and utilises the SoundCloud 
+ * and Imgur APIs, as well as the WebAudio API and the HTML5 canvas element.
+ * 
+ * @url http://memestream-soundcloud.herokuapp.com/
+ *
+ */
+
+
 (function() {
 
   $(function() {
 
+    // Variable declarations
     var SOUNDCLOUD_ID, USER_ID, IMGUR_KEY;
     var cWidth, cHeight, previousVolume;
     var player = document.getElementById('player');
@@ -12,16 +28,18 @@
     window.canvasElement = document.getElementById('canvas');
     window.context = canvasElement.getContext("2d");
 
+    // API keys needed by SoundCloud and Imgur
     SOUNDCLOUD_ID = "ddd1a518196f22519fc5ca02ca4a4fc7";
     IMGUR_KEY = "d93eaa3187ee692";
 
+    // Connect to the SoundCloud API
     SC.initialize({
       client_id: SOUNDCLOUD_ID,
-      redirect_uri: "http://localhost:4000/callback.html"
-      //redirect_uri: "http://memestream-soundcloud.herokuapp.com/callback.html"
+      redirect_uri: "http://memestream-soundcloud.herokuapp.com/callback.html"
+      //redirect_uri: "http://localhost:4000/callback.html"
     });
 
-    // handle signin
+    // Handle signin with SoundCloud
     $('.signin').click(function() {
       SC.connect(function(){
         SC.get("/me", function(user, error){
@@ -53,7 +71,7 @@
       $('.backToSounds').hide();
     });
 
-    // resize our canvas element so that it behavess responsively and always fits the window
+    // Resize our canvas element so that it behavess responsively and always fits the window
     $(window).on('load resize', function() {
       cWidth = $(window).width();
       cHeight = $(window).height();
@@ -61,7 +79,7 @@
       canvasElement.setAttribute('height', cHeight);
     });
 
-    // get our set of meme images from imgur and store them in an array for later use
+    // Get our set of meme images from imgur and store them in an array for later use
     var getImages = function(key) {
       $.ajax({
         url: 'https://api.imgur.com/3/gallery/g/memes',
@@ -86,6 +104,7 @@
       });
     }
 
+    // Load the user's list of sounds and get them ready for playback
     var getTracks = function(uid) {
       SC.get("/me/tracks", function(tracks, error){
         if(error){
@@ -107,7 +126,7 @@
       });
     }
 
-    // load our SoundCloud sound, process its waveform for the playback area, and connect it 
+    // Load our SoundCloud sound, process its waveform for the playback area, and connect it 
     // to our WebAudio object
     var loadTrack = function(uri) {
       SC.get(uri, function(track){
@@ -153,7 +172,7 @@
       
       if (audioSource.volume > (previousVolume + 1000) || audioSource.volume < (previousVolume + 1000)) {
         var newImgNo = Math.floor(audioSource.volume / 2000);
-        console.log('New image:' + newImgNo);
+        //console.log('New image:' + newImgNo);
         img1.src = images[newImgNo];
         context.drawImage(img1, 0, 0, cWidth, cHeight);
       }
