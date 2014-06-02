@@ -3,8 +3,9 @@
   $(function() {
 
     var SOUNDCLOUD_ID, USER_ID, IMGUR_KEY;
-    var cWidth, cHeight;
+    var cWidth, cHeight, previousVolume;
     var player = document.getElementById('player');
+    var images = [];
     var img1 = new Image;
 
     window.audioSource = new SoundCloudAudioSource(player);
@@ -72,6 +73,7 @@
       }).success(function(data) {
         //console.log(data);
         for(i = 0; i < 10; i ++) {
+          images[i] = data.data[i].link;
           $.imgpreload(data.data[i].link);
         }
         img1.addEventListener('load', function () {
@@ -149,6 +151,13 @@
         // use lines and shapes to draw to the canvas is various ways. Use your imagination!
       }
       
+      if (audioSource.volume > (previousVolume + 1000) || audioSource.volume < (previousVolume + 1000)) {
+        var newImgNo = Math.floor(audioSource.volume / 2000);
+        console.log('New image:' + newImgNo);
+        img1.src = images[newImgNo];
+        context.drawImage(img1, 0, 0, cWidth, cHeight);
+      }
+      previousVolume = audioSource.volume;
       var scale = (Math.log(audioSource.volume) + 0.5) / 10;
 
       // Save the current context
