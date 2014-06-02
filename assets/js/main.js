@@ -70,11 +70,14 @@
         },
         dataType: 'json'
       }).success(function(data) {
-        console.log(data);
+        //console.log(data);
+        for(i = 0; i < 10; i ++) {
+          $.imgpreload(data.data[i].link);
+        }
         img1.addEventListener('load', function () {
           context.drawImage(this, 0, 0, cWidth, cHeight);
         });
-        var randomInt = randomIntFromInterval(0, data.data.length)
+        var randomInt = randomIntFromInterval(0, 9)
         img1.src = data.data[randomInt].link;
       }).error(function() {
         alert('Could not reach api.imgur.com. Sorry :(');
@@ -89,7 +92,7 @@
           $('.panel-selector').show(500);
           $('.app-nav').show(500);
           if (tracks.length > 0) {
-            console.log(tracks);
+            //console.log(tracks); 
             for (var i=0, len=tracks.length; i<len; ++i) {
               var track = tracks[i];
               $('.tracks').append('<li><a class="sound" href="#'+track.uri+'" data-uri="'+track.uri+'" data-author="'+track.user.username+'" data-title="'+track.title+'"><span>'+track.title+'</span><img src="'+track.waveform_url+'"/></a></li>')

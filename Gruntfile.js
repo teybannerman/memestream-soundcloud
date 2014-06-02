@@ -40,6 +40,7 @@ module.exports = function(grunt) {
           './assets/js/jquery.js',
           './assets/js/uikit.js',
           './assets/js/waveform.js',
+          './assets/js/jquery.imgpreload.js',
           './assets/js/main.js'
         ],
         dest: './public/js/app.js',
