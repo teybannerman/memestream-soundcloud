@@ -90,22 +90,35 @@ a {
 
 .tracks {
 
-  li {
-    width: 300px;
-    height: 20px;
-    margin: 0 auto 8px;
-    padding: 14px;
-    background: #FFF;
-    list-style: none;
-    font-size: 13px;
-    border: 1px solid #CCC;
-    border-radius: 2px;
-    opacity: 0.9;
-    .box-shadow(0px 0px 6px #CCC);
+  .box-shadow(0px 0px 6px #CCC);
+  border-radius: 4px;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 300px;
 
+  li {
+    display: block;
+    height: 20px;
+    margin: 0;
+    padding: 14px;
+    list-style: none;
+    font-size: 12px;
+    border-bottom: 1px solid #CCC;
+    opacity: 0.9;
+    .gradient(#FFF, #F6F6F6, #FFF);
+
+    &:first-child {
+      border-radius: 4px 4px 0 0;
+    }
+
+    &:last-child {
+      border-radius: 0 0 4px 4px;
+    }
+    
     a {
       display: block;
       overflow: hidden;
+      font-weight: bold;
       text-align: left;
       text-overflow: ellipsis;
       width: 100%;
@@ -114,6 +127,18 @@ a {
       &:hover {
         color: @c-soundcloud-orange-secondary;
         text-decoration: none;
+      }
+
+      span {
+        width: 160px;
+        float: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      img {
+        width: 100px;
+        float: right;
+        background: @c-soundcloud-orange-secondary;
       }
     }
   }
@@ -135,5 +160,28 @@ a {
   .nav-logo {
     width: 120px;
     margin-top: 16px;
+  }
+}
+
+
+// @ VISUALISAIONS
+// --------------------------------------------------------------------------
+
+#vis {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  margin-bottom: 52px;
+  display: none;
+}
+
+
+// @ MEDIA QUERIES
+// --------------------------------------------------------------------------
+
+@media all and (max-width: 670px) {
+
+  h1 {
+    font-size: 32px;
   }
 }
