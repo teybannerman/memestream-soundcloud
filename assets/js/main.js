@@ -3,6 +3,14 @@
   $(function() {
 
     var SOUNDCLOUD_ID, USER_ID, IMGUR_KEY;
+    var cWidth, cHeight;
+    var player = document.getElementById('player');
+    var img1 = new Image;
+
+    window.audioSource = new SoundCloudAudioSource(player);
+    window.canvasElement = document.getElementById('canvas');
+    window.context = canvasElement.getContext("2d");
+
     SOUNDCLOUD_ID = "ddd1a518196f22519fc5ca02ca4a4fc7";
     IMGUR_KEY = "d93eaa3187ee692";
 
@@ -11,6 +19,7 @@
       redirect_uri: "http://localhost:4000/callback.html"
     });
 
+    // handle signin
     $('.signin').click(function() {
       SC.connect(function(){
         SC.get("/me", function(user, error){
@@ -27,98 +36,127 @@
       });
     });
 
+    // When a playlist item is clicked, load the track and play it
     $('a.sound').live('click', function() {
       var $this = ($(this));
       loadTrack($this.data('uri'));
       return false;
     });
 
-  });
-}).call(this);
+    // resize our canvas element so that it behavess responsively and always fits the window
+    $(window).on('load resize', function() {
+      cWidth = $(window).width();
+      cHeight = $(window).height();
+      canvasElement.setAttribute('width', cWidth);
+      canvasElement.setAttribute('height', cHeight);
+    });
 
+    // load our SoundCloud sound, process its waveform for the playback area, and connect it 
+    // to our WebAudio object
+    var loadTrack = function(uri) {
+      SC.get(uri, function(track){
 
-function getTracks(uid) {
-  SC.get("/me/tracks", function(tracks, error){
-    if(error){
-      alert("Error: " + error.message);
-    }else{
-      $('.panel-selector').show(500);
-      $('.app-nav').show(500);
-      if (tracks.length > 0) {
-        console.log(tracks);
-        for (var i=0, len=tracks.length; i<len; ++i) {
-          var track = tracks[i];
-          $('.tracks').append('<li><a class="sound" href="#'+track.uri+'" data-uri="'+track.uri+'">'+track.title+'</a></li>')
-        }
-      }
-      else {
-        $('.tracks').append('<p>You have no sounds</p>')
-      }
+        // load waveform
+        $('#waveform').empty();
+        var waveform = new Waveform({
+          container: document.getElementById("waveform"),
+          innerColor: "#333"
+        });
+
+        waveform.dataFromSoundCloudTrack(track);
+        var streamOptions = waveform.optionsForSyncedStream();
+
+        audioSource.defaultOptions = streamOptions;
+        audioSource.playStream(uri+'/stream?client_id=' + SOUNDCLOUD_ID);
+        draw();
+
+        /*SC.stream(track.uri, streamOptions, function(stream){
+          window.nowPlaying = stream;
+          //togglePause();
+        });*/
+      });
+
+      $('.panel-selector').hide(500);
+      $('#vis').show(500);
     }
-  });
-}
 
-function getImages(key, cat) {
-  $.ajax({
-    url: 'https://api.imgur.com/3/gallery/g/memes',
-    type: 'GET',
-    headers: {
-      Authorization: 'Client-ID ' + key,
-    },
-    dataType: 'json'
-  }).success(function(data) {
-    console.log(data);
-  }).error(function() {
-    alert('Could not reach api.imgur.com. Sorry :(');
-  });
-}
+    // get our set of meme images from imgur and store them in an array for later use
+    var getImages = function(key) {
+      $.ajax({
+        url: 'https://api.imgur.com/3/gallery/g/memes',
+        type: 'GET',
+        headers: {
+          Authorization: 'Client-ID ' + key,
+        },
+        dataType: 'json'
+      }).success(function(data) {
+        console.log(data);
+        img1.addEventListener('load', function () {
+          context.drawImage(this, 0, 0, cWidth, cHeight);
+        });
+        var randomInt = randomIntFromInterval(0, data.data.length)
+        img1.src = data.data[randomInt].link;
+      }).error(function() {
+        alert('Could not reach api.imgur.com. Sorry :(');
+      });
+    }
 
-function loadTrack(uri) {
+    var getTracks = function(uid) {
+      SC.get("/me/tracks", function(tracks, error){
+        if(error){
+          alert("Error: " + error.message);
+        }else{
+          $('.panel-selector').show(500);
+          $('.app-nav').show(500);
+          if (tracks.length > 0) {
+            console.log(tracks);
+            for (var i=0, len=tracks.length; i<len; ++i) {
+              var track = tracks[i];
+              $('.tracks').append('<li><a class="sound" href="#'+track.uri+'" data-uri="'+track.uri+'"><span>'+track.title+'</span><img src="'+track.waveform_url+'"/></a></li>')
+            }
+          }
+          else {
+            $('.tracks').append('<p>You have no sounds</p>')
+          }
+        }
+      });
+    }
 
-  SC.get(uri, function(track){
+    var draw = function() {
 
-    // load waveform
-    var waveform = new Waveform({
-      container: document.getElementById("waveform"),
-      innerColor: "#333"
-    });
-
-    waveform.dataFromSoundCloudTrack(track);
-    var streamOptions = waveform.optionsForSyncedStream();
-    SC.stream(track.uri, streamOptions, function(stream){
-      window.nowPlaying = stream;
-      togglePause();
-    });
-  });
-}
-
-function togglePause() {
-  window.nowPlaying.togglePause();
-}
-
-
-/*var audioSource = new SoundCloudAudioSource('player');
-var canvasElement = document.getElementById('canvas');
-var context = canvasElement.getContext("2d");
-
-var draw = function() {
-    // you can then access all the frequency and volume data
-    // and use it to draw whatever you like on your canvas
-    for(bin = 0; bin < audioSource.streamData.length; bin ++) {
+      for(bin = 0; bin < audioSource.streamData.length; bin ++) {
         // do something with each value. Here's a simple example
-        var val = audioSource.streamData[bin];
+        /*var val = audioSource.streamData[bin];
         var red = val;
         var green = 255 - val;
         var blue = val / 2; 
         context.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
-        context.fillRect(bin * 2, 0, 2, 200);
+        context.fillRect(bin * 2, 0, 2, 200);*/
         // use lines and shapes to draw to the canvas is various ways. Use your imagination!
-    }
-    requestAnimationFrame(draw);
-};
+      }
+      
+      var scale = (Math.log(audioSource.volume) + 1) / 10;
 
-audioSource.playStream('url_to_soundcloud_stream');
-draw();*/
+      // Save the current context
+      context.save();
+      // Translate to the center point of our image
+      context.translate((canvas.width / 4) + img1.width * 0.5, (canvas.height / 4) + img1.height * 0.5);
+      // Scale our view area
+      context.scale(scale, scale);
+      // Translate back to the top left of our image
+      context.translate(-img1.width * 0.5, -img1.height * 0.5);
+      // Redraw the image
+      context.drawImage(img1, 0, 0);
+      // Restore the context ready for the next loop
+      context.restore();
+
+      var lastX=canvas.width/2, lastY=canvas.height/2;
+
+      requestAnimationFrame(draw);
+    };
+
+  });
+}).call(this);
 
 
 // SoundCloudAudioSource functions courtesy of
@@ -154,11 +192,21 @@ var SoundCloudAudioSource = function(player) {
     this.volume = 0;
     this.streamData = new Uint8Array(128);
     this.playStream = function(streamUrl) {
-        // get the input stream from the audio element
-        player.addEventListener('ended', function(){
-            self.directStream('coasting');
-        });
-        player.setAttribute('src', streamUrl);
-        player.play();
+      // get the input stream from the audio element
+      player.addEventListener('ended', function(){
+        self.directStream('coasting');
+      });
+      player.setAttribute('src', streamUrl);
+      player.play();
     }
 };
+
+
+/**
+* Return a random integer between two values
+*/
+function randomIntFromInterval(min,max) {
+    return Math.floor(Math.random()*(max-min+1)+min);
+}
+
+
