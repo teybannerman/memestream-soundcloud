@@ -135,12 +135,12 @@
         // use lines and shapes to draw to the canvas is various ways. Use your imagination!
       }
       
-      var scale = (Math.log(audioSource.volume) + 1) / 10;
+      var scale = (Math.log(audioSource.volume) + 0.5) / 10;
 
       // Save the current context
       context.save();
       // Translate to the center point of our image
-      context.translate((canvas.width / 4) + img1.width * 0.5, (canvas.height / 4) + img1.height * 0.5);
+      context.translate((canvas.width / 2), (canvas.height / 2));
       // Scale our view area
       context.scale(scale, scale);
       // Translate back to the top left of our image
@@ -149,8 +149,6 @@
       context.drawImage(img1, 0, 0);
       // Restore the context ready for the next loop
       context.restore();
-
-      var lastX=canvas.width/2, lastY=canvas.height/2;
 
       requestAnimationFrame(draw);
     };
