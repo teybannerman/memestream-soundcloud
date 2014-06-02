@@ -85,7 +85,7 @@ module.exports = function(grunt) {
       /* watch and see if our javascript files change */
       js: {
         files: ['assets/js/**/*.js'],
-        tasks: ['concat','uglify']
+        tasks: ['concat'/*,'uglify'*/]
       },
       /* watch and see if our other asset files change */
       fonts: {
@@ -121,6 +121,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-connect');
 
-  grunt.registerTask('build',['bowercopy','concat','uglify','less','copy']);
+  grunt.registerTask('build',['bowercopy','concat',/*'uglify',*/'less','copy']);
   grunt.registerTask('default',['build','connect','watch']);
 }
